@@ -95,6 +95,7 @@ td.fols,th.fols{background:color-mix(in srgb,#f5e33a 22%,transparent)}
 .top div{max-width:1000px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:10px}
 .top strong{flex:1;font-size:16px}
 a.btn{display:inline-flex;align-items:center;padding:7px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);text-decoration:none}
+[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -506,5 +507,7 @@ db.collection("hotels").onSnapshot(onHotels,showErr);
 }).catch(showErr);
 })();
 </script>
+<div id="noaccess" hidden style="max-width:600px;margin:40px auto;padding:0 14px"><div class="card"><h2>Nog niet beschikbaar</h2><p class="hint">Deze module is in opbouw en voorlopig enkel toegankelijk voor beheerders.</p><p><a href="../home/" class="btn">&larr; Terug naar home</a></p></div></div>
+<script>/* Voorlopig enkel voor beheerders */claude.use("user").then(function(u){return u.canEdit()}).then(function(a){if(!a){document.querySelector("main").hidden=true;document.getElementById("noaccess").hidden=false}})</script>
 </body>
 </html>

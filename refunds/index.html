@@ -75,6 +75,7 @@ table.list td{border:0;padding:0}table.list td.hide{display:none}
 body{background:#fff}.top,#app>*:not(#detail),#detail>.noprint,#login{display:none!important}
 main{padding:0;max-width:none}#detail{border:0;padding:0;margin:0}.sheet{border:0;max-width:none;padding:0}
 }
+[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -315,5 +316,7 @@ load();listen();
 });
 }).catch(function(e){$("list").innerHTML='<p class="err">Laden mislukt: '+esc(e&&e.message||e)+'</p>'});
 </script>
+<div id="noaccess" hidden style="max-width:600px;margin:40px auto;padding:0 14px"><div class="card"><h2>Nog niet beschikbaar</h2><p class="hint">Deze module is in opbouw en voorlopig enkel toegankelijk voor beheerders.</p><p><a href="../home/" class="btn">&larr; Terug naar home</a></p></div></div>
+<script>/* Voorlopig enkel voor beheerders */claude.use("user").then(function(u){return u.canEdit()}).then(function(a){if(!a){document.querySelector("main").hidden=true;document.getElementById("noaccess").hidden=false}})</script>
 </body>
 </html>
