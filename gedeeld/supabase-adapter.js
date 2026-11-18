@@ -1,6 +1,7 @@
 // Verbindt de stocktelling-app met Supabase (aanmelden + gedeelde opslag).
 (function(){
 var sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY),me=null,editor=false,ok,ready=new Promise(function(r){ok=r});
+window.sbClient=sb; // voor modules met eigen tabellen (bv. refunds)
 function err(r){if(r.error)throw r.error;return r}
 function P(p){return p.split("/")}
 function rows(path){

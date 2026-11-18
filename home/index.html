@@ -36,7 +36,7 @@ button.p{background:var(--ac);color:var(--acx);border-color:var(--ac)}
 .tile:hover,.tile:focus-visible{border-color:var(--ac);transform:translateY(-2px)}
 .tile .ic{font-size:30px;line-height:1}.tile h2{margin:12px 0 4px}.tile p{margin:0;color:var(--mut);font-size:13px}
 .tile.soon{opacity:.75}.tag{display:inline-block;margin-top:10px;font-size:11px;padding:2px 8px;border-radius:9px;background:var(--bg);color:var(--mut)}
-#sum{margin-top:10px;font-size:13px}
+#sum,.rs{margin-top:10px;font-size:13px}
 @media (max-width:640px){main{padding:12px 12px 32px}input,select,button{min-height:42px;font-size:16px}}
 </style>
 </head>
@@ -48,8 +48,8 @@ button.p{background:var(--ac);color:var(--acx);border-color:var(--ac)}
 <div class="card bar" id="hotel"><span class="hint">Laden…</span></div>
 <div class="tiles">
 <a class="tile" href="../stocktelling/"><div class="ic">&#128230;</div><h2>Stocktelling</h2><p>Maandelijkse voorraadtelling per categorie.</p><div id="sum"></div></a>
-<a class="tile soon" href="../kassa/"><div class="ic">&#129534;</div><h2>Kassa</h2><p>Kassabeheer en afsluitingen.</p><span class="tag">In opbouw</span></a>
-<a class="tile soon" href="../refunds/"><div class="ic">&#8617;&#65039;</div><h2>Refunds</h2><p>Terugbetalingen opvolgen.</p><span class="tag">In opbouw</span></a>
+<a class="tile" href="../kassa/"><div class="ic">&#129534;</div><h2>Kassa</h2><p>Kassatelling per week en afdrachten.</p></a>
+<a class="tile" href="../refunds/"><div class="ic">&#8617;&#65039;</div><h2>Refunds</h2><p>Terugbetalingen invullen en opvolgen.</p><div id="rsum" class="rs"></div></a>
 </div>
 </main>
 <script>if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("../sw.js").catch(function(){})})</script>
@@ -83,11 +83,23 @@ var k=ks.indexOf(today)>=0?today:ks[ks.length-1],cats=(M[k]||{}).cats||{},t=0;
 Object.keys(cats).forEach(function(c){(cats[c]||[]).forEach(function(it){t+=n(it.pr)*n(it.e)})});
 $("sum").innerHTML='<strong>'+esc(label(k))+'</strong> · waarde eind '+fm.format(t)+(L[hid+"_"+k]?' · 🔒 afgesloten':'');
 }
+var rch=null,rt=null;
+function rsum(){
+clearTimeout(rt);rt=setTimeout(function(){
+var sb=window.sbClient;if(!sb||!hid){$("rsum").textContent="";return}
+sb.from("refunds").select("status,bedrag").eq("hotel_id",hid).in("status",["open","afgesloten"]).then(function(r){
+if(r.error||!r.data){$("rsum").textContent="";return}
+var o=0,a=0,s=0;r.data.forEach(function(x){if(x.status==="open")o++;else{a++;s+=+x.bedrag}});
+$("rsum").innerHTML=(o||a)?'<strong>'+o+'</strong> open · <strong>'+a+'</strong> afgesloten'+(a?' ('+fm.format(s)+')':''):'Geen openstaande refunds';
+});
+},200);
+if(!rch&&window.sbClient)rch=window.sbClient.channel("home-refunds").on("postgres_changes",{event:"*",schema:"public",table:"refunds"},rsum).subscribe();
+}
 function select(id){
 if(id===hid)return;
 hid=id;M={};if(unsub)unsub();unsub=null;
 if(isAdmin&&id)try{localStorage.setItem(KEY,id)}catch(e){}
-bar();sum();
+bar();sum();rsum();
 if(id)unsub=db.collection("hotels/"+id+"/months").onSnapshot(function(s){M={};s.docs.forEach(function(d){M[d.id]=d.data()});sum()},function(){});
 }
 function pick(){

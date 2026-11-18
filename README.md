@@ -10,12 +10,24 @@ Webapp voor maandelijkse stocktelling per hotel. Hosting: GitHub Pages (pagina) 
 
 Elke module staat in een eigen map. Een aanpassing aan de ene module raakt de andere niet.
 
-- `home/`: startpagina met hotelkeuze (beheerder) en knoppen naar de modules
+- `home/`: startpagina met hotelkeuze (beheerder), live samenvatting en knoppen naar de modules
 - `stocktelling/`: de stocktelling
-- `kassa/`, `refunds/`: in opbouw
+- `kassa/`: kassatelling per week (bewaard bij de maandgegevens van de stocktelling)
+- `refunds/`: refunds invullen, afsluiten, uitbetalen, afdrukken volgens het refundblad en exporteren
 - `gedeeld/`: aanmelden en Supabase (`config.js`, `supabase-adapter.js`, `supabase.min.js`), gebruikt door alle modules
+- `database/`: SQL-scripts voor Supabase (`refunds.sql`)
 
 In de hoofdmap blijven enkel de bestanden die daar moeten staan: `index.html` (stuurt door naar `home/`), `sw.js`, `manifest.webmanifest` en de icoontjes. Het gekozen hotel wordt in de browser onthouden en geldt in elke module.
+
+Later koppelen aan de live omgeving: zie `KOPPELEN-AAN-LIVE.md`.
+
+## Refunds
+
+- Eenmalig: voer `database/refunds.sql` uit in de SQL Editor van Supabase.
+- Een hotel vult een refund in (zelfde velden als het refundblad) en sluit ze af. Daarna kan het hotel ze niet meer wijzigen.
+- De beheerder zet een afgesloten refund op uitbetaald (met datum) of geweigerd (met reden), of heropent ze.
+- Rekeningnummers worden gecontroleerd (IBAN-controlegetal). De server weigert ongeldige gegevens en laat een hotel enkel zijn eigen refunds zien.
+- Onder "Hotelgegevens" vul je adres, BTW, telefoon en e-mail in voor de hoofding van het afgedrukte blad.
 
 ## Opzetten
 
