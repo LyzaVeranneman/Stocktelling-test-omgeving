@@ -62,6 +62,17 @@ table.cat tr.tot{border-top:2px solid var(--bd)}
 table.cat tr.tot td{border:0}
 table.cat tr.tot td:empty{display:none}
 }
+.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--bd)}
+.top div{max-width:1000px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.top strong{flex:1;font-size:16px}
+a.btn{display:inline-flex;align-items:center;padding:7px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);text-decoration:none}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
+.tile{display:block;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:22px 18px;color:var(--tx);text-decoration:none;transition:border-color .15s,transform .15s}
+.tile:hover,.tile:focus-visible{border-color:var(--ac);transform:translateY(-2px)}
+.tile .ic{font-size:30px;line-height:1}.tile h2{margin:12px 0 4px}.tile p{margin:0;color:var(--mut);font-size:13px}
+.tile.soon{opacity:.75}.tile .tag{display:inline-block;margin-top:10px;font-size:11px;padding:2px 8px;border-radius:9px;background:var(--bg);color:var(--mut)}
+#homesum{margin-top:10px;font-size:13px;color:var(--tx)}
+[hidden]{display:none!important}
 tr.bad td{background:color-mix(in srgb,var(--bad) 10%,transparent)}
 tr.bad td.k-we{color:var(--bad);font-weight:700}
 tr.wr td{text-align:left;color:var(--bad);font-size:13px;padding:6px 8px 10px;background:color-mix(in srgb,var(--bad) 10%,transparent)}
@@ -73,8 +84,20 @@ tr.wr button{margin-left:8px;border-color:var(--bad);color:var(--bad)}
 </head>
 <body>
 <div id="login" style="position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center"><div class="card" style="width:min(340px,92vw)"><h2>Aanmelden</h2><label for="le">E-mail</label><input id="le" type="email" autocomplete="username"><label for="lp" style="margin-top:8px">Wachtwoord</label><input id="lp" type="password" autocomplete="current-password"><p><button class="p" id="li">Aanmelden</button> <span id="lm" class="hint"></span></p></div></div>
-<main>
-<h1>Stocktelling <button id="so" style="float:right;font-size:12px">Afmelden</button></h1>
+<header class="top"><div><a href="#home" class="btn" id="homebtn" hidden>&larr; Home</a><strong id="toptitle">Home</strong><button id="so" style="font-size:12px">Afmelden</button></div></header>
+<main id="page-home" data-page>
+<h1>Welkom</h1>
+<div class="card months" id="homehotel"><span class="hint">Laden…</span></div>
+<div class="tiles">
+<a class="tile" href="#stocktelling"><div class="ic">&#128230;</div><h2>Stocktelling</h2><p>Maandelijkse voorraadtelling per categorie.</p><div id="homesum"></div></a>
+<a class="tile soon" href="#kassa"><div class="ic">&#129534;</div><h2>Kassa</h2><p>Kassabeheer en afsluitingen.</p><span class="tag">In opbouw</span></a>
+<a class="tile soon" href="#refunds"><div class="ic">&#8617;&#65039;</div><h2>Refunds</h2><p>Terugbetalingen opvolgen.</p><span class="tag">In opbouw</span></a>
+</div>
+</main>
+<main id="page-soon" data-page hidden>
+<div class="card"><h2 id="soontitle"></h2><p class="hint">Deze module is nog in opbouw.</p><p><a href="#home" class="btn">&larr; Terug naar home</a></p></div>
+</main>
+<main id="page-stocktelling" data-page hidden>
 <div class="months" id="hotels"></div>
 <div class="months" id="months"></div>
 <div class="card meta">
@@ -279,7 +302,7 @@ $("st").textContent="Afgesloten";
 }else if($("st").textContent==="Afgesloten")status();
 }
 function show(){
-hotelBar();$("lockbtn").hidden=true;$("delmbtn").hidden=true;
+homeBar();homeSum();hotelBar();$("lockbtn").hidden=true;$("delmbtn").hidden=true;
 if(catView&&isAdmin&&hid&&!allView&&!impView){$("months").innerHTML="";$("tabs").innerHTML="";viewCats();return}
 if(impView&&isAdmin){$("months").innerHTML="";$("tabs").innerHTML="";$("datum").value="";viewImport();return}
 if(allView&&isAdmin){$("months").innerHTML="";$("tabs").innerHTML="";$("datum").value="";viewAll();return}
@@ -292,6 +315,35 @@ allCats(hid).forEach(function(c){if(!S.months[cm].cats[c])S.months[cm].cats[c]=[
 $("datum").value=S.months[cm].datum||"";
 monthBar();tabs();cur==="Overview"?overview():category(cur);var lb=$("lockbtn");lb.hidden=!isAdmin;lb.textContent=isLocked(hid,cm)?"Maand heropenen":"Maand afsluiten";var dm=$("delmbtn");dm.hidden=!isAdmin;dm.removeAttribute("data-sure");dm.textContent="Maand verwijderen";dm.disabled=!monthEmpty(cm)||isLocked(hid,cm);dm.title=dm.disabled?"Enkel een open maand zonder ingevulde voorraad kan verwijderd worden":"";lock();
 }
+var PAGES={home:"Home",stocktelling:"Stocktelling",kassa:"Kassa",refunds:"Refunds"};
+function route(){
+var r=location.hash.slice(1);if(!PAGES[r])r="home";
+var pg=r==="kassa"||r==="refunds"?"soon":r;
+[].forEach.call(document.querySelectorAll("[data-page]"),function(m){m.hidden=m.id!=="page-"+pg});
+$("toptitle").textContent=PAGES[r];$("homebtn").hidden=r==="home";$("soontitle").textContent=PAGES[r];
+document.title=r==="home"?"Hotelportaal":PAGES[r];
+if(r==="stocktelling"&&!typing())show();else{homeBar();homeSum()}
+window.scrollTo(0,0);
+}
+function homeBar(){
+var el=$("homehotel");if(!el||(document.activeElement&&document.activeElement.id==="hhsel"))return;
+var ids=Object.keys(H).sort(function(a,b){return H[a].localeCompare(H[b])}),h;
+if(!db)h='<span class="hint">Laden…</span>';
+else if(isAdmin){
+if(!ids.length)h='<span class="hint">Nog geen hotels. Voeg er een toe via Stocktelling.</span>';
+else{h='<label for="hhsel" style="margin:0">Hotel</label><select id="hhsel">';ids.forEach(function(i){h+='<option value="'+i+'"'+(i===hid?" selected":"")+'>'+esc(H[i])+'</option>'});h+='</select><span class="hint">Je keuze geldt voor alle modules.</span>'}
+}else h=hid?'<strong>'+esc(H[hid]||"")+'</strong>':'<span class="hint">Open Stocktelling om je hotel aan te maken.</span>';
+el.innerHTML=h;
+}
+function homeSum(){
+var el=$("homesum");if(!el)return;
+if(!hid||!keys().length){el.textContent="";return}
+var ks=keys(),k=ks.indexOf(today)>=0?today:ks[ks.length-1],m=S.months[k],t=0;
+visCats(hid,m).forEach(function(c){((m.cats||{})[c]||[]).forEach(function(it){t+=n(it.pr)*n(it.e)})});
+el.innerHTML='<strong>'+esc(label(k))+'</strong> · waarde eind '+fm.format(t)+(isLocked(hid,k)?' · 🔒 afgesloten':'');
+}
+$("homehotel").onchange=function(e){if(e.target.id==="hhsel"&&e.target.value!==hid)selectHotel(e.target.value)};
+window.addEventListener("hashchange",route);
 function viewAll(){
 $("view").innerHTML='<h2>Alle hotels</h2><div class="months"><input type="month" id="amonth" value="'+allMonth+'"><button id="aload" class="p">Tonen</button><button id="aexp">Exporteer CSV</button></div><div id="aout" class="wrap"><p class="hint">Laden…</p></div>';
 loadAll();
@@ -422,7 +474,7 @@ document.addEventListener("visibilitychange",function(){if(document.visibilitySt
 $("delmbtn").onclick=delMonth;
 $("lockbtn").onclick=function(){if(hid&&cm)setClosed(hid,cm,!isLocked(hid,cm))};
 try{if(window.claude&&claude.use)claude.use("downloads").then(function(d){dl=d},function(){})}catch(e){}
-show();
+route();
 (function(){
 if(!window.claude||!claude.use){$("view").innerHTML='<p class="hint">Open deze pagina via claude.ai om gegevens te kunnen bewaren.</p>';return}
 Promise.all([claude.use("db"),claude.use("user")]).then(function(r){
