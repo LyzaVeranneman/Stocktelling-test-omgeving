@@ -15,7 +15,7 @@ Elke module staat in een eigen map. Een aanpassing aan de ene module raakt de an
 - `kassa/`: kassatelling per week (bewaard bij de maandgegevens van de stocktelling)
 - `refunds/`: refunds invullen, afsluiten, uitbetalen, afdrukken volgens het refundblad en exporteren
 - `gedeeld/`: aanmelden en Supabase (`config.js`, `supabase-adapter.js`, `supabase.min.js`), gebruikt door alle modules
-- `database/`: SQL-scripts voor Supabase (`refunds.sql`)
+- `database/`: SQL-scripts voor Supabase: `backup.sql`, `refunds.sql`, `kassa.sql`, `controle.sql`, `herstel.sql`
 
 In de hoofdmap blijven enkel de bestanden die daar moeten staan: `index.html` (stuurt door naar `home/`), `sw.js`, `manifest.webmanifest` en de icoontjes. Het gekozen hotel wordt in de browser onthouden en geldt in elke module.
 

@@ -119,6 +119,24 @@ a.btn{display:inline-flex;align-items:center;padding:7px 12px;border:1px solid v
 <script src="../gedeeld/config.js"></script>
 <script src="../gedeeld/supabase-adapter.js"></script>
 <script>
+// Veiligheid: de kassapagina bewaart ENKEL het kassadeel van een maand (database/kassa.sql, functie kassa_save).
+// Stockgegevens (producten, aantallen, prijzen), hotels en maanden kan deze pagina niet wijzigen of verwijderen.
+(function(){
+var use=claude.use;
+function nee(){return Promise.reject({code:"enkel-via-stocktelling"})}
+claude.use=function(n){return use(n).then(function(x){
+if(n!=="db"||!x)return x;
+return{collection:function(p){return x.collection(p)},doc:function(p){
+var q=p.split("/");
+if(q[0]==="hotels"&&q.length===4)return{set:function(d){
+return window.sbClient.rpc("kassa_save",{p_hotel:q[1],p_month:q[3],p_kassa:(d&&d.kassa&&typeof d.kassa==="object")?d.kassa:{}}).then(function(r){if(r.error)throw r.error})},delete:nee};
+if(q[0]==="hotels")return{set:nee,delete:nee};
+return x.doc(p);
+}};
+})};
+})();
+</script>
+<script>
 var CATS=["Ontbijt","Bar Dranken","Bar Voeding","Guest Supplies","Vending","Tickets","Boutique","Onderhoudsproducten"];
 var db=null,canWrite=true,isAdmin=false,myId="",allView=false,impView=false,L={},dl=null,lastAll=null,allMonth=today0(),H={},hid="",mUnsub=null,S={months:{}},cm="",cur="Overview",dirty={},writing={},timers={};
 function today0(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()<9?"0":"")+(d.getMonth()+1)}

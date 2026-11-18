@@ -2,6 +2,21 @@
 -- Plak alles in Supabase > SQL Editor > New query en klik op Run.
 -- Mag meerdere keren uitgevoerd worden. Eerst in het testproject; later hetzelfde script in het live project.
 -- Vereist de bestaande stocktelling-tabellen (hotels, editors, is_editor).
+-- Voegt enkel NIEUWE tabellen toe (refunds, hotel_info). Bestaande gegevens worden niet gewijzigd.
+
+begin;
+
+-- 0. Voorcontrole: stopt zonder iets te wijzigen als de stocktelling-database er anders uitziet.
+do $$
+begin
+  if to_regclass('public.hotels') is null
+     or not exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'hotels' and column_name = 'id' and data_type = 'text') then
+    raise exception 'Tabel hotels (met tekstkolom id) niet gevonden. Er is niets gewijzigd.';
+  end if;
+  if to_regprocedure('public.is_editor()') is null then
+    raise exception 'Functie is_editor() niet gevonden. Er is niets gewijzigd.';
+  end if;
+end $$;
 
 -- 1. Tabellen ---------------------------------------------------------------
 
@@ -109,6 +124,8 @@ begin
     alter publication supabase_realtime add table public.refunds;
   end if;
 end $$;
+
+commit;
 
 -- 5. Controle -------------------------------------------------------------------
 
