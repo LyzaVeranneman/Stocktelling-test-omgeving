@@ -5,9 +5,9 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Stocktelling</title>
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon-192.png" type="image/png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <meta name="theme-color" content="#29335c">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -78,7 +78,7 @@ tr.wr button{margin-left:8px;border-color:var(--bad);color:var(--bad)}
 </head>
 <body>
 <div id="login" style="position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center"><div class="card" style="width:min(340px,92vw)"><h2>Aanmelden</h2><label for="le">E-mail</label><input id="le" type="email" autocomplete="username"><label for="lp" style="margin-top:8px">Wachtwoord</label><input id="lp" type="password" autocomplete="current-password"><p><button class="p" id="li">Aanmelden</button> <span id="lm" class="hint"></span></p></div></div>
-<header class="top"><div><a href="index.html" class="btn">&larr; Home</a><strong>Stocktelling</strong><button id="so" style="font-size:12px">Afmelden</button></div></header>
+<header class="top"><div><a href="../home/" class="btn">&larr; Home</a><strong>Stocktelling</strong><button id="so" style="font-size:12px">Afmelden</button></div></header>
 <main>
 <div class="months" id="hotels"></div>
 <div class="months" id="months"></div>
@@ -90,10 +90,10 @@ tr.wr button{margin-left:8px;border-color:var(--bad);color:var(--bad)}
 <div class="card" id="view"></div>
 <p class="hint">Enkel de gele cellen moeten ingevuld worden. De beginvoorraad en de waarde begin van een maand zijn automatisch de eindvoorraad en de waarde eind van de vorige maand. Alles wordt gedeeld bewaard. Producten, eenheden en prijzen worden automatisch overgenomen uit de vorige maand. Product en eenheid pas je aan in de eerste maand waarin het product voorkomt; de prijs kan je in elke maand aanpassen. Een gewijzigde prijs geldt ook voor de volgende maanden, tot je daar zelf een andere prijs invult. Een product verwijderen kan enkel als begin en eind 0 zijn. De beheerder kan een maand afsluiten. Elk hotel ziet enkel zijn eigen gegevens.</p>
 </main>
-<script>if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})</script>
-<script src="js/supabase.min.js"></script>
-<script src="config.js"></script>
-<script src="supabase-adapter.js"></script>
+<script>if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("../sw.js").catch(function(){})})</script>
+<script src="../gedeeld/supabase.min.js"></script>
+<script src="../gedeeld/config.js"></script>
+<script src="../gedeeld/supabase-adapter.js"></script>
 <script>
 var CATS=["Ontbijt","Bar Dranken","Bar Voeding","Guest Supplies","Vending","Tickets","Boutique","Onderhoudsproducten"];
 var db=null,canWrite=true,isAdmin=false,myId="",allView=false,impView=false,L={},dl=null,lastAll=null,allMonth=today0(),H={},hid="",mUnsub=null,S={months:{}},cm="",cur="Overview",dirty={},writing={},timers={};

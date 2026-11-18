@@ -6,15 +6,16 @@ Webapp voor maandelijkse stocktelling per hotel. Hosting: GitHub Pages (pagina) 
 - Editors zien alle hotels, het overzicht "Alle hotels", kunnen maanden afsluiten en importeren. Een afgesloten maand wordt door de server geweigerd voor hotels.
 - De regel "product verwijderen enkel bij begin en eind 0" werkt in de pagina, niet op de server.
 
-## Pagina's
+## Mappen
 
-Elke module heeft een eigen bestand, zodat een aanpassing aan de ene module de andere niet raakt:
+Elke module staat in een eigen map. Een aanpassing aan de ene module raakt de andere niet.
 
-- `index.html`: home met hotelkeuze (beheerder) en knoppen naar de modules
-- `stocktelling.html`: de stocktelling
-- `kassa.html`, `refunds.html`: in opbouw
+- `home/`: startpagina met hotelkeuze (beheerder) en knoppen naar de modules
+- `stocktelling/`: de stocktelling
+- `kassa/`, `refunds/`: in opbouw
+- `gedeeld/`: aanmelden en Supabase (`config.js`, `supabase-adapter.js`, `supabase.min.js`), gebruikt door alle modules
 
-Gedeeld door alle pagina's: `config.js`, `supabase-adapter.js` (aanmelden), `js/supabase.min.js`. Het gekozen hotel wordt in de browser onthouden en geldt op elke pagina.
+In de hoofdmap blijven enkel de bestanden die daar moeten staan: `index.html` (stuurt door naar `home/`), `sw.js`, `manifest.webmanifest` en de icoontjes. Het gekozen hotel wordt in de browser onthouden en geldt in elke module.
 
 ## Opzetten
 
@@ -24,7 +25,7 @@ Gedeeld door alle pagina's: `config.js`, `supabase-adapter.js` (aanmelden), `js/
 4. Ga naar **Authentication > Users > Add user**. Maak een account (e-mail + wachtwoord, vink "Auto Confirm User" aan) voor jezelf, je collega en elk hotel.
 5. Maak jezelf en je collega editor, via **SQL Editor**:
    `insert into editors select id from auth.users where email in ('jij@voorbeeld.be','collega@voorbeeld.be');`
-6. Ga naar **Project Settings > API**. Kopieer "Project URL" en de "anon public" key naar `config.js`. Gebruik nooit de service_role key.
+6. Ga naar **Project Settings > API**. Kopieer "Project URL" en de "anon public" key naar `gedeeld/config.js`. Gebruik nooit de service_role key.
 7. Maak op GitHub een nieuwe repository en upload alle bestanden uit deze map.
 8. Ga naar **Settings > Pages**, kies "Deploy from a branch", branch `main`, map `/ (root)`, en klik Save.
 9. Na een minuut staat de pagina op `https://GEBRUIKERSNAAM.github.io/REPONAAM/`. Stuur die link naar de hotels, samen met hun aanmeldgegevens.

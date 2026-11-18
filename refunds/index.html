@@ -5,9 +5,9 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Refunds</title>
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon-192.png" type="image/png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <meta name="theme-color" content="#29335c">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -42,12 +42,12 @@ button.p{background:var(--ac);color:var(--acx);border-color:var(--ac)}
 </head>
 <body>
 <div id="login" style="position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center"><div class="card" style="width:min(340px,92vw)"><h2>Aanmelden</h2><label for="le">E-mail</label><input id="le" type="email" autocomplete="username"><label for="lp" style="margin-top:8px">Wachtwoord</label><input id="lp" type="password" autocomplete="current-password"><p><button class="p" id="li">Aanmelden</button> <span id="lm" class="hint"></span></p></div></div>
-<header class="top"><div><a href="index.html" style="text-decoration:none"><button>&larr; Home</button></a><strong>Refunds</strong><button id="so" style="font-size:12px">Afmelden</button></div></header>
+<header class="top"><div><a href="../home/" style="text-decoration:none"><button>&larr; Home</button></a><strong>Refunds</strong><button id="so" style="font-size:12px">Afmelden</button></div></header>
 <main>
 <div class="card"><h2>Refunds</h2><p>Terugbetalingen opvolgen.</p><p class="hint">Deze module is nog in opbouw.</p></div>
 </main>
-<script src="js/supabase.min.js"></script>
-<script src="config.js"></script>
-<script src="supabase-adapter.js"></script>
+<script src="../gedeeld/supabase.min.js"></script>
+<script src="../gedeeld/config.js"></script>
+<script src="../gedeeld/supabase-adapter.js"></script>
 </body>
 </html>
